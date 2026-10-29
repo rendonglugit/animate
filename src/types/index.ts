@@ -17,6 +17,9 @@ export interface AnimationInfo {
   duration?: number; // 秒
   totalFrames?: number;
   fps?: number;
+  version?: string; // 如 SVGA 2.0 / 1.0 等
+  spritesCount?: number;
+  audiosCount?: number;
 }
 
 export interface DynamicReplaceItem {
@@ -25,6 +28,24 @@ export interface DynamicReplaceItem {
   label: string;
   value: string; // 文本内容或图片DataURL/URL
   placeholderUrl?: string; // 原始图
+  // 可选文本高级参数
+  fontSize?: string;
+  fontColor?: string;
+  fontFamily?: string;
+  offsetX?: number;
+  offsetY?: number;
+  // 原始图像分辨率
+  imageWidth?: number;
+  imageHeight?: number;
+}
+
+export interface SvgaApiOptions {
+  contentMode: 'AspectFit' | 'AspectFill' | 'Fill';
+  clearsAfterStop: boolean;
+  reverse: boolean;
+  rangeEnabled: boolean;
+  rangeLocation: number;
+  rangeLength: number;
 }
 
 export interface PlaybackState {

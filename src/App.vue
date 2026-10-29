@@ -226,9 +226,11 @@
             :info="currentInfo" 
             :playback="playback" 
             :dynamic-items="dynamicItems" 
+            :svga-options="svgaOptions"
             @update:playback="updatePlayback"
             @update:info="updateInfo"
             @update:dynamic-items="updateDynamicItems"
+            @update:svga-options="updateSvgaOptions"
           />
           <LottiePlayer 
             v-else-if="currentInfo.type === 'lottie'" 
@@ -302,7 +304,9 @@
         :info="currentInfo"
         :playback="playback"
         :dynamic-items="dynamicItems"
+        :svga-options="svgaOptions"
         @update:dynamic-items="updateDynamicItems"
+        @update:svga-options="updateSvgaOptions"
       />
     </div>
   </div>
@@ -311,7 +315,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue';
 import { Upload, UploadCloud, AlertCircle, Sparkles } from 'lucide-vue-next';
-import type { AnimationInfo, PlaybackState, DynamicReplaceItem } from './types';
+import type { AnimationInfo, PlaybackState, DynamicReplaceItem, SvgaApiOptions } from './types';
 import { detectFileType } from './utils/detector';
 
 import Controls from './components/Controls.vue';
@@ -353,6 +357,15 @@ const playback = reactive<PlaybackState>({
 });
 
 const dynamicItems = ref<DynamicReplaceItem[]>([]);
+
+const svgaOptions = reactive<SvgaApiOptions>({
+  contentMode: 'AspectFit',
+  clearsAfterStop: false,
+  reverse: false,
+  rangeEnabled: false,
+  rangeLocation: 0,
+  rangeLength: 30
+});
 
 const sampleAnimations = [
   {
@@ -445,6 +458,10 @@ function updateDynamicItems(items: DynamicReplaceItem[]) {
   dynamicItems.value = items;
 }
 
+function updateSvgaOptions(patch: Partial<SvgaApiOptions>) {
+  Object.assign(svgaOptions, patch);
+}
+
 function loadFile(file: File) {
   currentFile.value = file;
   const detectedType = detectFileType(file.name, file.type);
@@ -459,6 +476,14 @@ function loadFile(file: File) {
   playback.speed = 1.0;
   playback.zoom = 1.0;
   dynamicItems.value = [];
+
+  // 重置 SVGA 选项
+  svgaOptions.contentMode = 'AspectFit';
+  svgaOptions.clearsAfterStop = false;
+  svgaOptions.reverse = false;
+  svgaOptions.rangeEnabled = false;
+  svgaOptions.rangeLocation = 0;
+  svgaOptions.rangeLength = 30;
 }
 
 function onFileChange(e: Event) {
