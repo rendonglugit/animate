@@ -5,11 +5,11 @@
 </p>
 
 <p align="center">
-  <a href="https://rendonglugit.github.io/anim-lab/"><img src="https://img.shields.io/badge/Live%20Demo-在线体验-6366f1?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Live Demo" /></a>
+  <a href="https://rendonglugit.github.io/animate/"><img src="https://img.shields.io/badge/Live%20Demo-在线体验-6366f1?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Live Demo" /></a>
 </p>
 
 <p align="center">
-  🌐 <b>在线体验地址 (Live Demo):</b> <a href="https://rendonglugit.github.io/anim-lab/">https://rendonglugit.github.io/anim-lab/</a>
+  🌐 <b>在线体验地址 (Live Demo):</b> <a href="https://rendonglugit.github.io/animate/">https://rendonglugit.github.io/animate/</a>
 </p>
 
 <p align="center">
@@ -80,6 +80,6 @@ npm run build
 ## 🌐 部署至 GitHub Pages
 
 项目已内置 [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) 自动化流水线：
-1. 将当前项目 push 至 GitHub 仓库 `main` 分支：`https://github.com/rendonglugit/anim-lab`
+1. 将当前项目 push 至 GitHub 仓库 `main` 分支：`https://github.com/rendonglugit/animate`
 2. 在仓库的 **Settings -> Pages** 中，将 **Build and deployment -> Source** 设置为 **GitHub Actions**。
-3. 之后每次 push 都会全自动构建并上线至 [https://rendonglugit.github.io/anim-lab/](https://rendonglugit.github.io/anim-lab/)。
+3. 之后每次 push 都会全自动构建并上线至 [https://rendonglugit.github.io/animate/](https://rendonglugit.github.io/animate/)。

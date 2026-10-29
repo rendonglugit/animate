@@ -5,11 +5,11 @@
 </p>
 
 <p align="center">
-  <a href="https://rendonglugit.github.io/anim-lab/"><img src="https://img.shields.io/badge/Live%20Demo-Online%20Preview-6366f1?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Live Demo" /></a>
+  <a href="https://rendonglugit.github.io/animate/"><img src="https://img.shields.io/badge/Live%20Demo-Online%20Preview-6366f1?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Live Demo" /></a>
 </p>
 
 <p align="center">
-  🌐 <b>Live Online Demo:</b> <a href="https://rendonglugit.github.io/anim-lab/">https://rendonglugit.github.io/anim-lab/</a>
+  🌐 <b>Live Online Demo:</b> <a href="https://rendonglugit.github.io/animate/">https://rendonglugit.github.io/animate/</a>
 </p>
 
 <p align="center">
@@ -80,7 +80,7 @@ npm run build
 
 This project comes pre-configured with [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
 
-1. Push this repository to your GitHub `main` branch: `https://github.com/rendonglugit/anim-lab`
+1. Push this repository to your GitHub `main` branch: `https://github.com/rendonglugit/animate`
 2. Go to repository **Settings -> Pages**.
 3. Under **Build and deployment -> Source**, select **GitHub Actions**.
-4. GitHub will automatically build and deploy your site to [https://rendonglugit.github.io/anim-lab/](https://rendonglugit.github.io/anim-lab/).
+4. GitHub will automatically build and deploy your site to [https://rendonglugit.github.io/animate/](https://rendonglugit.github.io/animate/).
