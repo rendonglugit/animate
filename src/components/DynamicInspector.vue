@@ -428,10 +428,26 @@
       <!-- ==================== 4. 官方 API 代码集成生成器 ==================== -->
       <div v-if="activeTab === 'code'" class="space-y-3 text-xs">
         <div class="flex items-center justify-between">
-          <span class="text-slate-400">根据当前配置生成的工程集成代码</span>
+          <div class="flex items-center bg-slate-950 p-0.5 rounded-lg border border-slate-800 text-[11px]">
+            <button 
+              @click="codeType = 'modern'"
+              :class="codeType === 'modern' ? 'bg-indigo-600 text-white font-medium shadow-sm' : 'text-slate-400 hover:text-slate-200'"
+              class="px-2 py-0.5 rounded transition-colors cursor-pointer"
+            >
+              svga-web (现代多线程/推荐)
+            </button>
+            <button 
+              @click="codeType = 'classic'"
+              :class="codeType === 'classic' ? 'bg-indigo-600 text-white font-medium shadow-sm' : 'text-slate-400 hover:text-slate-200'"
+              class="px-2 py-0.5 rounded transition-colors cursor-pointer"
+            >
+              经典 svgaplayerweb
+            </button>
+          </div>
+
           <button 
             @click="copyCode" 
-            class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs flex items-center gap-1 transition-colors cursor-pointer"
+            class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs flex items-center gap-1 transition-colors cursor-pointer shadow-sm"
           >
             <Check v-if="copied" class="w-3.5 h-3.5" />
             <Copy v-else class="w-3.5 h-3.5" />
@@ -481,6 +497,7 @@ const emit = defineEmits<{
 const activeTab = ref<'dynamic' | 'assets' | 'info' | 'code'>('dynamic');
 const searchQuery = ref('');
 const copied = ref(false);
+const codeType = ref<'modern' | 'classic'>('modern');
 
 const isSvga = computed(() => props.info.type === 'svga');
 
@@ -635,7 +652,46 @@ const generatedCode = computed(() => {
   const replacedImages = props.dynamicItems.filter(i => i.type === 'image' && i.value);
   const replacedTexts = props.dynamicItems.filter(i => i.type === 'text' && i.value);
 
-  return `import SVGA from 'svgaplayerweb';
+  if (codeType.value === 'modern') {
+    return `// 现代 Web 推荐方案: svga-web (多线程解码/OffscreenCanvas/原生Audio)
+// 安装: npm i svga-web
+import { Downloader, Parser, Player } from 'svga-web';
+
+// 1. 初始化 Player 绑定 HTML5 Canvas
+const canvas = document.getElementById('myCanvas');
+const player = new Player(canvas);
+const downloader = new Downloader();
+const parser = new Parser();
+
+// 2. 配置播放参数
+player.set({
+  loop: ${props.playback.isLoop ? 'true' : '1'}, // 循环次数或 boolean
+  fillMode: '${svgaOpts.value.clearsAfterStop ? 'backwards' : 'forwards'}', // 清屏或留存最后一帧
+  playMode: '${svgaOpts.value.reverse ? 'fallbacks' : 'forwards'}', // 倒序或正序播放
+  ${svgaOpts.value.rangeEnabled ? `startFrame: ${svgaOpts.value.rangeLocation},\n  endFrame: ${svgaOpts.value.rangeLocation + svgaOpts.value.rangeLength},` : ''}
+});
+
+// 3. 异步下载与多线程解析
+const fileData = await downloader.get('./${props.info.name || 'animation.svga'}');
+const svgaData = await parser.do(fileData);
+${replacedImages.length > 0 ? '\n// 4. 动态图片替换 (如用户头像)\n' + replacedImages.map(i => `const img_${i.key} = new Image();\nimg_${i.key}.src = '${i.value.startsWith('data:') ? '[Base64/URL 图片]' : i.value}';\nsvgaData.dynamicElements['${i.key}'] = { source: img_${i.key}, fit: 'contain' };`).join('\n') : ''}
+${replacedTexts.length > 0 ? '\n// 5. 动态文本注入 (通过离屏 Canvas 绘制)\n' + replacedTexts.map(i => `const textCanvas_${i.key} = document.createElement('canvas');
+const ctx_${i.key} = textCanvas_${i.key}.getContext('2d');
+textCanvas_${i.key}.width = 200; textCanvas_${i.key}.height = 50;
+ctx_${i.key}.font = '${i.fontSize || '24px'} Arial';
+ctx_${i.key}.fillStyle = '${i.fontColor || '#ffffff'}';
+ctx_${i.key}.textAlign = 'center'; ctx_${i.key}.textBaseline = 'middle';
+ctx_${i.key}.fillText('${i.value}', 100, 25);
+svgaData.dynamicElements['${i.key}'] = { source: textCanvas_${i.key}, fit: 'contain' };`).join('\n') : ''}
+
+// 6. 挂载数据并启动播放
+await player.mount(svgaData);
+player.start();`;
+  }
+
+  return `// 经典方案: svgaplayerweb
+// 安装: npm i svgaplayerweb
+import SVGA from 'svgaplayerweb';
 
 // 1. 初始化 Player 并挂载到容器
 const container = document.getElementById('svgaContainer');
@@ -643,7 +699,7 @@ const player = new SVGA.Player(container);
 const parser = new SVGA.Parser();
 
 // 2. 配置播放模式与清屏策略
-player.loops = ${props.playback.isLoop ? 0 : 1}; // 0 为无限循环，大于0为指定循环次数
+player.loops = ${props.playback.isLoop ? 0 : 1}; // 0 为无限循环
 player.clearsAfterStop = ${svgaOpts.value.clearsAfterStop};
 player.setContentMode('${svgaOpts.value.contentMode}');
 
